@@ -1,2 +1,7 @@
-.vagrant
 .DS_Store
+
+.vagrant/
+authorized_keys
+ssh_config
+app/*
+ansible/hosts_production
