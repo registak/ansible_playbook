@@ -4,4 +4,3 @@
 authorized_keys
 ssh_config
 app/*
-ansible/hosts_production
