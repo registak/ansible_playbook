@@ -1,0 +1,8 @@
+---
+- hosts: app
+  roles:
+    - common
+    # - rbenv
+    # - nginx
+    # - mysql
+    # - rails
