@@ -1,8 +1,25 @@
 ---
-- hosts: app
+- hosts: vm
   roles:
-    - common
-    # - rbenv
-    # - nginx
-    # - mysql
-    # - rails
+    - swap
+
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: add EPEL
+      shell: creates=/etc/yum.repos.d/epel.repo rpm -Uvh --replacepkgs http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+    - name: yum update
+      yum: name=* state=latest
+
+- hosts: mysql
+  roles:
+    - mysql
+
+
+- hosts: application
+  handlers:
+  roles:
+    - { role: base, tags: base }
+    - { role: ruby, tags: ruby }
+    # - vim
+    # - webserver

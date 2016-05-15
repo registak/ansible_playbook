@@ -1,0 +1,15 @@
+---
+- include: rbenv.yml
+  when: ruby_install == 'rbenv'
+
+- name: Adds .gemrc
+  template: src=gemrc dest={{ user_home_path }}/.gemrc owner={{ user_name }} group={{ group_name }}
+
+- name: Install bundler
+  command: gem install bundler --no-ri --no-rdoc
+  sudo_user: '{{ ruby_user_name }}'
+
+# - name: bundle install
+#   command: bundle install chdir={{ app_path }}
+#   sudo_user: '{{ ruby_user_name }}'
+#   when: target == 'virtualbox'

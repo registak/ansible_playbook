@@ -1,0 +1,6 @@
+---
+rails_env: development
+target: virtualbox
+autoconf: true
+vm_memory: 1024
+vm_swap: 1024

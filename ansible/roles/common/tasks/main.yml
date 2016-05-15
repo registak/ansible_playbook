@@ -1,40 +1,88 @@
 ---
 - name: add EPEL
+  sudo: yes
   shell: creates=/etc/yum.repos.d/epel.repo rpm -Uvh --replacepkgs http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+  tags:
+    - common
+    - common:install
+    - epel
+
 - name: yum update
+  sudo: yes
   yum: name=* state=latest
+  tags:
+    - common
+    - common:install
+    - yum
+
 - name: install basic packages
+  sudo: yes
   yum: name={{ item }} state=installed
   with_items: base_packages
+  tags:
+    - common
+    - common:install
+    - yum
 
 - name: install Development Tool
-  sudo: true
-  shell: yum -y groupinstall "Development Tools"
+  sudo: yes
+  yum: name="@Development tools" state=present
+  tags:
+    - common
+    - common:install
+    - yum:groupinstall
 
 # timezone
 - name: set timezone
+  sudo: yes
   file: src=/usr/share/zoneinfo/Asia/Tokyo dest=/etc/localtime state=link force=yes
+  tags:
+    - common
+    - common:setup
+    - timezone
 
 # hostname
 - name: set hostname
+  sudo: yes
   hostname: name={{ hostname }}
+  tags:
+    - common
+    - common:setup
+    - hostname
+
 - name: set /etc/hosts
+  sudo: yes
   lineinfile: dest=/etc/hosts regexp=^127\.0\.0\.1 line='127.0.0.1 {{ hostname }} localhost localhost.localdomain'
+  tags:
+    - common
+    - common:setup
+    - hostname
 
 # DNS Info mation
 - name: update resolv.conf
-  sudo: true
+  sudo: yes
   shell: chmod a+w /etc/resolv.conf && echo 'options single-request-reopen' >> /etc/resolv.conf
+  tags:
+    - common
+    - common:setup
+    - rosolv
 
 # set up iptables
 - name: iptables is enabled and started
-  sudo: true
+  sudo: yes
   service: name=iptables state=running enabled=yes
   tags: iptables
+  tags:
+    - common
+    - common:setup
+    - iptables
 
 - name: iptables is configured
-  sudo: true
+  sudo: yes
   template: src="iptables.j2" dest="/etc/sysconfig/iptables" owner=root group=root mode=0600
   notify:
     - restart iptables
-  tags: iptables
+  tags:
+    - common
+    - common:setup
+    - iptables
