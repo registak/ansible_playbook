@@ -16,7 +16,8 @@ def require_plugins(plugins = {})
 end
 
 require_plugins \
-  'vagrant-bindfs' => '0.3.2'
+  'vagrant-bindfs' => '0.3.2',
+  'vagrant-hostsupdater' => '1.0.2'
 
 VAGRANTFILE_API_VERSION = '2'
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -53,7 +54,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       'mysql' => %w(myapp),
       'development:children' => %w(application vm mysql),
     }
-    # ansible.inventory_path = "hosts"
     ansible.limit = "all"
   end
 

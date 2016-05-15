@@ -18,11 +18,10 @@ base_packages:
   - git
 packages:
   - ImageMagick
-manual_ruby_version: 2.2.4
 server_name: localhost
 rails_version: 4
 ruby_install: rbenv
-ruby_version: 2.2.1
+ruby_version: 2.2.4
 environment_file: /myapp/.envrc
 databases:
   - mysql
