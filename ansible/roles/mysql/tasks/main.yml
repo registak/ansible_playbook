@@ -1,0 +1,28 @@
+---
+- name: Install packages
+  yum: name={{ item }}
+  with_items:
+    - mysql-server
+    - MySQL-python
+
+- name: check exist sock file
+  stat: path=/var/lib/mysql/mysql.sock
+  register: is_sock_file
+
+- name: if is not, add sock file
+  file: path=/var/lib/mysql/mysql.sock state=touch owner=mysql group=mysql mode=0644
+  when: not is_sock_file.stat.exists
+
+
+- name: Enable and start mysql
+  service: name=mysqld state=running enabled=yes
+
+- name: Create mysql user
+  mysql_user: name={{ mysql_db_user }} password={{ mysql_db_password }} priv=*.*:ALL
+
+- name: Create mysql database
+  mysql_db: name={{ mysql_db_name }}
+
+- name: Create config/database.yml
+  template: src=database.yml.j2 dest={{ shared_config_path }}/database.yml owner={{ user_name }} mode=0600 backup=yes
+  when: mysql_orm in ['activerecord', 'sequel', 'datamapper']
