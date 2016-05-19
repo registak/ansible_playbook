@@ -16,8 +16,9 @@ def require_plugins(plugins = {})
 end
 
 require_plugins \
-  'vagrant-bindfs' => '0.3.2',
-  'vagrant-hostsupdater' => '1.0.2'
+  'vagrant-hostsupdater' => '1.0.2',
+  'vagrant-bindfs' => '0.3.2'
+
 
 VAGRANTFILE_API_VERSION = '2'
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -37,16 +38,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     machine.vm.network 'forwarded_port', :guest => 443, :host => 8081, :auto_correct => true
     machine.vm.network :private_network, ip: '192.168.33.10'
 
-    # machine.vm.synced_folder '../../', '/myapp', :type => 'nfs'
-    # machine.vm.synced_folder '../ansible', '/ansible', :type => 'nfs'
-    # machine.bindfs.bind_folder '//myapp', '//myapp'
-    # machine.bindfs.bind_folder '/ansible', '/ansible'
+    machine.vm.synced_folder '../../', '/myapp', :type => 'nfs'
+    machine.vm.synced_folder '../ansible', '/ansible', :type => 'nfs'
+    # machine.bindfs.bind_folder '//myapp', '//myapp', after: :provision
+    # machine.bindfs.bind_folder '/ansible', '/ansible', after: :provision
   end
 
   config.ssh.forward_agent = true
 
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "ansible/site.yml"
+    ansible.playbook = "../ansible/site.yml"
     ansible.sudo = true
     ansible.groups = {
       'application' => %w(myapp),
