@@ -1,8 +1,0 @@
----
-- name: restart iptables
-  sudo: yes
-  service: name=iptables state=restarted
-  tags:
-    - common
-    - common:setup
-    - iptables
